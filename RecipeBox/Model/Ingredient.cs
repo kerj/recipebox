@@ -6,15 +6,15 @@ namespace RecipeBox.Models
 {
   public class Ingredient
   {
+    private string _ingredientName;
     private int _id;
-    private string _ingredient;
 
-    public Ingredient(string ingredient, int id = 0)
+    public Ingredient(string ingredientName, int id = 0)
     {
-      _ingredient = ingredient;
+      _ingredientName = ingredientName;
       _id = id;
     }
-    public string Ingredient { get => _ingredient; set => _ingredient = value ;}
+    public string IngredientName { get => _ingredientName; set => _ingredientName = value ;}
     public int Id { get => _id ;}
 
     public static List<Ingredient> GetAll()
@@ -27,7 +27,7 @@ namespace RecipeBox.Models
       MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
       while(rdr.Read())
       {
-        Ingredient newIngredient = new Ingredient(rdr.GetInt32(0), rdr.GetString(1));
+        Ingredient newIngredient = new Ingredient(rdr.GetString(0), rdr.GetInt32(1));
         allIngredients.Add(newIngredient);
       }
       conn.Close();
@@ -87,8 +87,8 @@ namespace RecipeBox.Models
       else
       {
         Ingredient newIngredient = (Ingredient) otherIngredient;
-        bool idEquality = this.GetId() == newIngredient.GetId();
-        bool nameEquality = this.GetName() == newIngredient.GetName();
+        bool idEquality = this.Id == newIngredient.Id;
+        bool nameEquality = this.IngredientName == newIngredient.IngredientName;
         // We no longer compare Ingredients' recipeIds here.
         return (idEquality && nameEquality);
       }
@@ -100,7 +100,7 @@ namespace RecipeBox.Models
       MySqlConnection conn = DB.Connection();
       conn.Open();
       MySqlCommand cmd = new MySqlCommand(@"INSERT INTO ingredients (ingredient) VALUES (@ingredient);", conn);
-      cmd.Parameters.AddWithValue("@ingredient", this._ingredient);
+      cmd.Parameters.AddWithValue("@ingredient", this._ingredientName);
       cmd.ExecuteNonQuery();
       _id = (int) cmd.LastInsertedId;
       conn.Close();
@@ -110,15 +110,15 @@ namespace RecipeBox.Models
       }
     }
 
-    public void Edit(string newIngredient)
+    public void Edit(string newIngredientName)
     {
       MySqlConnection conn = DB.Connection();
       conn.Open();
       MySqlCommand cmd = new MySqlCommand(@"UPDATE ingredients SET ingredient = @newIngredient WHERE id = @searchId;", conn);
       cmd.Parameters.AddWithValue("@searchId", _id);
-      cmd.Parameters.AddWithValue("@newIngredient", newIngredient);
+      cmd.Parameters.AddWithValue("@newIngredient", newIngredientName);
       cmd.ExecuteNonQuery();
-      _ingredient = newIngredient;
+      _ingredientName = newIngredientName;
       conn.Close();
       if (conn != null)
       {
@@ -148,9 +148,13 @@ namespace RecipeBox.Models
         var recipeQueryRdr = command.ExecuteReader() as MySqlDataReader;
         while(recipeQueryRdr.Read())
         {
-          int thisRecipeId = recipeQueryRdr.GetInt32(0);
-          string recipeName = recipeQueryRdr.GetString(1);
-          Recipe foundRecipe = new Recipe(recipeName, thisRecipeId);
+
+          Recipe foundRecipe = new Recipe(
+          recipeQueryRdr.GetString(0),
+          recipeQueryRdr.GetString(1),
+          recipeQueryRdr.GetString(2),
+          recipeQueryRdr.GetInt32(3)
+          );
           recipes.Add(foundRecipe);
         }
         recipeQueryRdr.Dispose();
@@ -168,7 +172,7 @@ namespace RecipeBox.Models
       MySqlConnection conn = DB.Connection();
       conn.Open();
       MySqlCommand cmd = new MySqlCommand(@"INSERT INTO recipes_ingredients (recipe_id, ingredient_id) VALUES (@RecipeId, @IngredientId);", conn);
-      cmd.Parameters.AddWithValue("@RecipeId", newRecipe.GetId());
+      cmd.Parameters.AddWithValue("@RecipeId", newRecipe.Id);
       cmd.Parameters.AddWithValue("@IngredientId", _id);
       cmd.ExecuteNonQuery();
 
@@ -184,7 +188,7 @@ namespace RecipeBox.Models
       MySqlConnection conn = DB.Connection();
       conn.Open();
       MySqlCommand cmd = new MySqlCommand(@"DELETE FROM ingredients WHERE id = @IngredientId; DELETE FROM categories_ingredients WHERE ingredient_id = @IngredientId;", conn);
-      cmd.Parameters.AddWithValue("@IngredientId", this.GetId());
+      cmd.Parameters.AddWithValue("@IngredientId", this.Id);
       cmd.ExecuteNonQuery();
       if (conn != null)
       {

@@ -14,11 +14,14 @@
 /Users/Guest/Desktop/RecipeBox.Solution/RecipeBox/obj/Debug/netcoreapp2.2/RecipeBox.TagHelpers.input.cache
 /Users/Guest/Desktop/RecipeBox.Solution/RecipeBox/obj/Debug/netcoreapp2.2/RecipeBox.TagHelpers.output.cache
 /Users/Guest/Desktop/RecipeBox.Solution/RecipeBox/obj/Debug/netcoreapp2.2/RecipeBox.RazorCoreGenerate.cache
-/Users/Guest/Desktop/RecipeBox.Solution/RecipeBox/obj/Debug/netcoreapp2.2/Razor/View/Home/Index.g.cshtml.cs
-/Users/Guest/Desktop/RecipeBox.Solution/RecipeBox/obj/Debug/netcoreapp2.2/Razor/View/Recipes/Index.g.cshtml.cs
 /Users/Guest/Desktop/RecipeBox.Solution/RecipeBox/obj/Debug/netcoreapp2.2/RecipeBox.RazorTargetAssemblyInfo.cache
 /Users/Guest/Desktop/RecipeBox.Solution/RecipeBox/obj/Debug/netcoreapp2.2/RecipeBox.RazorTargetAssemblyInfo.cs
 /Users/Guest/Desktop/RecipeBox.Solution/RecipeBox/obj/Debug/netcoreapp2.2/RecipeBox.Views.pdb
 /Users/Guest/Desktop/RecipeBox.Solution/RecipeBox/obj/Debug/netcoreapp2.2/RecipeBox.dll
 /Users/Guest/Desktop/RecipeBox.Solution/RecipeBox/obj/Debug/netcoreapp2.2/RecipeBox.pdb
 /Users/Guest/Desktop/RecipeBox.Solution/RecipeBox/obj/Debug/netcoreapp2.2/RecipeBox.csproj.CopyComplete
+/Users/Guest/Desktop/RecipeBox.Solution/RecipeBox/obj/Debug/netcoreapp2.2/Razor/Views/Home/Index.g.cshtml.cs
+/Users/Guest/Desktop/RecipeBox.Solution/RecipeBox/obj/Debug/netcoreapp2.2/Razor/Views/Ingredients/Index.g.cshtml.cs
+/Users/Guest/Desktop/RecipeBox.Solution/RecipeBox/obj/Debug/netcoreapp2.2/Razor/Views/Recipes/Index.g.cshtml.cs
+/Users/Guest/Desktop/RecipeBox.Solution/RecipeBox/obj/Debug/netcoreapp2.2/Razor/Views/Recipes/New.g.cshtml.cs
+/Users/Guest/Desktop/RecipeBox.Solution/RecipeBox/obj/Debug/netcoreapp2.2/Razor/Views/Recipes/Show.g.cshtml.cs

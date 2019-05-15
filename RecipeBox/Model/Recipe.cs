@@ -6,17 +6,17 @@ namespace RecipeBox.Models
 {
   public class Recipe
   {
+
     private string _food;
     private string _category;
     private string _instruction;
     private int _id;
 
-
-    public Recipe(string food, string category, string instruction, int id = 0)
+    public Recipe(string food, string category, string instructions, int id = 0)
     {
       _food = food;
       _category = category;
-      _instruction = instruction;
+      _instruction = instructions;
       _id = id;
     }
 
@@ -35,15 +35,14 @@ namespace RecipeBox.Models
       var rdr = cmd.ExecuteReader() as MySqlDataReader;
       while(rdr.Read())
       {
-
-        Recipe newRecipe = new Recipe(
-        rdr.GetString(0),
-        rdr.GetString(1),
-        rdr.GetString(2),
-        rdr.GetInt32(3)
-        );
+        int RecipeId = rdr.GetInt32(0);
+        string FoodName = rdr.GetString(1);
+        string RecipeInstructions = rdr.GetString(2);
+        string CategoryName = rdr.GetString(3);
+        Recipe newRecipe = new Recipe(FoodName, RecipeInstructions, CategoryName, RecipeId);
 
         allRecipes.Add(newRecipe);
+
       }
       conn.Close();
       if (conn != null)
@@ -75,16 +74,24 @@ namespace RecipeBox.Models
       cmd.Parameters.AddWithValue("@searchId", id);
       var rdr = cmd.ExecuteReader() as MySqlDataReader;
       int RecipeId = 0;
-      string RecipeName = "";
+      string FoodName = "";
+      string RecipeInstructions = "";
+      string CategoryName = "";
       // We remove the line setting a ingredientRecipeId value here.
       while(rdr.Read())
       {
         RecipeId = rdr.GetInt32(0);
-        RecipeName = rdr.GetString(1);
+        FoodName = rdr.GetString(1);
+        RecipeInstructions = rdr.GetString(2);
+        CategoryName = rdr.GetString(3);
         // We no longer read the patientRecipeId here, either.
       }
+
+      Recipe newRecipe = new Recipe(FoodName, RecipeInstructions, CategoryName, RecipeId);
+
       // Constructor below no longer includes a patientRecipeId parameter:
-      Recipe newRecipe = new Recipe(RecipeName, RecipeId);
+
+
       conn.Close();
       if (conn != null)
       {
@@ -93,7 +100,7 @@ namespace RecipeBox.Models
       return newRecipe;
     }
 
-    public List<Ingredients> GetIngredients()
+    public List<Ingredient> GetIngredients()
     {
       MySqlConnection conn = DB.Connection();
       conn.Open();
@@ -146,7 +153,13 @@ namespace RecipeBox.Models
         Recipe newRecipe = (Recipe) otherRecipe;
         bool idEquality = this.Id.Equals(newRecipe.Id);
         bool foodEquality = this.Food.Equals(newRecipe.Food);
-        return (idEquality && foodEquality);
+        bool instructionsEquality = this.Instruction.Equals(newRecipe.Instruction);
+        bool categoryEquality = this.Category.Equals(newRecipe.Category);
+        return (idEquality &&
+              foodEquality &&
+              instructionsEquality &&
+              categoryEquality
+              );
       }
     }
 
@@ -154,8 +167,10 @@ namespace RecipeBox.Models
     {
       MySqlConnection conn = DB.Connection();
       conn.Open();
-      MySqlCommand cmd = new MySqlCommand(@"INSERT INTO recipes (food) VALUES (@food);", conn);
+      MySqlCommand cmd = new MySqlCommand(@"INSERT INTO recipes (food, instructions, category) VALUES (@food, @instructions, @category);", conn);
       cmd.Parameters.AddWithValue("@food", this._food);
+      cmd.Parameters.AddWithValue("@instructions", this._instruction);
+      cmd.Parameters.AddWithValue("@category", this._category);
 
       cmd.ExecuteNonQuery();
       _id = (int) cmd.LastInsertedId; // <-- This line is new!
@@ -179,7 +194,7 @@ namespace RecipeBox.Models
 
       foreach (Ingredient ingredient in recipeIngredient)
       {
-        patient.Delete();
+        ingredient.Delete();
       }
 
       cmd.CommandText = @"DELETE FROM recipes WHERE id = @thisId;";
